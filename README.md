@@ -3,7 +3,7 @@
 # NetworkChat
 
 ## Product Purpose
-A graphical client-server application for exchanging text messages
+Graphical client-server application for exchanging text messages
 
 ## Prerequisites
 - Install Visual Studio 2022 Community Edition
