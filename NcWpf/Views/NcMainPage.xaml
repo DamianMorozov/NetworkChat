@@ -1,0 +1,130 @@
+﻿<Page
+    x:Class="NcWpf.Views.NcMainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="clr-namespace:NcWpf.Helpers"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodels="clr-namespace:NcCore.ViewModels"
+    Title="NcMainPage"
+    d:DataContext="{d:DesignInstance Type=viewmodels:NcMainViewModel,
+                                     IsDesignTimeCreatable=True}"
+    d:DesignHeight="300"
+    d:DesignWidth="700"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <helpers:NcBoolToClientConnectTextConverter x:Key="BoolToClientConnectTextConverter" />
+        <helpers:NcBoolToServerConnectTextConverter x:Key="BoolToServerConnectTextConverter" />
+        <helpers:NcBoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </Page.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <!--  Left section - Connection  -->
+        <StackPanel Grid.RowSpan="2" Margin="5">
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="16"
+                FontWeight="Bold"
+                Text="Connection" />
+            <TextBlock Text="IP address : port" />
+            <TextBox Margin="0,2,0,10" Text="{Binding IpAddressPort, UpdateSourceTrigger=PropertyChanged}" />
+            <!--  Switch  -->
+            <ToggleButton
+                Margin="5"
+                Content="Server mode"
+                IsChecked="{Binding IsServerControlsVisible, Mode=TwoWay}" />
+            <ToggleButton
+                Margin="5"
+                Content="Client mode"
+                IsChecked="{Binding IsClientControlsVisible, Mode=TwoWay}" />
+        </StackPanel>
+        <!--  Server  -->
+        <Button
+            Grid.Row="2"
+            Margin="5"
+            Command="{Binding ServerConnectCommand}"
+            Content="Create server"
+            IsEnabled="{Binding ServerConnectCommand.CanExecute}"
+            Visibility="{Binding IsServerControlsVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
+        <Button
+            Grid.Row="3"
+            Margin="5"
+            Command="{Binding ServerDisconnectCommand}"
+            Content="Shut down the server"
+            IsEnabled="{Binding ServerDisconnectCommand.CanExecute}"
+            Visibility="{Binding IsServerControlsVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
+        <!--  Client  -->
+        <Button
+            Grid.Row="2"
+            Margin="5"
+            Command="{Binding ClientConnectCommand}"
+            Content="Connect client"
+            IsEnabled="{Binding ClientConnectCommand.CanExecute}"
+            Visibility="{Binding IsClientControlsVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
+        <Button
+            Grid.Row="3"
+            Margin="5"
+            Command="{Binding ClientDisconnectCommand}"
+            Content="Disconnect client"
+            IsEnabled="{Binding ClientDisconnectCommand.CanExecute}"
+            Visibility="{Binding IsClientControlsVisible, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+        <!--  Right section - Chat  -->
+        <StackPanel Grid.Column="1" Margin="5">
+            <TextBlock
+                Margin="0,0,0,10"
+                FontSize="16"
+                FontWeight="Bold"
+                Text="Chat" />
+            <ScrollViewer
+                Height="350"
+                Margin="0,0,0,10"
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Messages}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+
+        <!--  Right section - Send message  -->
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Margin="5"
+            Text="{Binding InputMessage, UpdateSourceTrigger=PropertyChanged}" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="5"
+            Command="{Binding SendMessageCommand}"
+            Content="Send message"
+            IsEnabled="{Binding SendMessageCommand.CanExecute}" />
+        <Button
+            Grid.Row="3"
+            Grid.Column="1"
+            Margin="5"
+            Command="{Binding ClearCommand}"
+            Content="Clear chat" />
+    </Grid>
+</Page>

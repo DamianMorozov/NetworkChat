@@ -1,0 +1,15 @@
+﻿global using Autofac;
+global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+global using NcCore.Networking;
+global using NcCore.ViewModels;
+global using NcWpf.Helpers;
+global using NcWpf.Interfaces;
+global using NcWpf.Services;
+global using NcWpf.Views;
+global using System.Collections.ObjectModel;
+global using System.Globalization;
+global using System.Net;
+global using System.Windows.Controls;
+global using System.Windows.Data;
+global using System.Windows;
