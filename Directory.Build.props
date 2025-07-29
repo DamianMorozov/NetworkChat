@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<Deterministic>true</Deterministic>
+		<LangVersion>preview</LangVersion>
+		<WarningLevel>4</WarningLevel>
+		<AnalysisLevel>preview</AnalysisLevel>
+		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<DefineConstants>DEBUG;TRACE</DefineConstants>
+		<DebugSymbols>true</DebugSymbols>
+		<DebugType>full</DebugType>
+		<Optimize>false</Optimize>
+		<OutputPath>bin\Debug_AnyCPU</OutputPath>
+		<ErrorReport>prompt</ErrorReport>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+		<DebugType>portable</DebugType>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<DefineConstants>TRACE</DefineConstants>
+		<OutputPath>bin\Release_AnyCPU</OutputPath>
+	</PropertyGroup>
+</Project>

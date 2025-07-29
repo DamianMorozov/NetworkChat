@@ -1,0 +1,11 @@
+﻿global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+global using NcCore.Enums;
+global using NcCore.Interfaces;
+global using NcCore.Networking;
+global using System.Collections.ObjectModel;
+global using System.Net.Sockets;
+global using System.Net;
+global using System.Text.Json.Serialization;
+global using System.Text.Json;
+global using System.Text;
