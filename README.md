@@ -45,7 +45,7 @@ sudo sh VBoxLinuxAdditions.run
 sudo apt update
 sudo apt install -y build-essential libgtk-3-dev pkg-config
 ```
-- Installieren Sie das .NET SDK, um NcGtk zu starten
+- Install the .NET SDK to run NcGtk
 ```
 sudo apt update
 sudo add-apt-repository ppa:dotnet/backports
@@ -56,12 +56,12 @@ sudo apt install dotnet9
 dotnet --version
 dotnet --list-sdks
 ```
-- Installieren Sie [LocalSend](https://localsend.org/ru) für den Austausch von Dateien über das lokale Netzwerk
+- Install [LocalSend](https://localsend.org/ru) for file sharing over a local network.
 ```
 sudo snap install localsend
 localsend
 ```
-- Starten Sie NcGtk
+- Start NcGtk
 ```
 cd ~/Downloads/NcGtkRelease
 dotnet NcGtk.dll
