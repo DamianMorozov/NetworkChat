@@ -66,3 +66,6 @@ localsend
 cd ~/Downloads/NcGtkRelease
 dotnet NcGtk.dll
 ```
+
+## Screenshots
+<p align="center"><img src="Assets/Demonstrate_local.png"></p>
