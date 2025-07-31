@@ -90,12 +90,14 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - name: Create and push tag
+      - name: Create tag and release
+        run: |
+          gh auth setup-git
+          gh release create ${{ steps.get_version.outputs.version }} ./artifacts/* \
+            --title "${{ steps.get_version.outputs.version }}" \
+            --notes "${{ steps.get_body.outputs.body }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git tag ${{ steps.get_version.outputs.version }}
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} ${{ steps.get_version.outputs.version }}
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
