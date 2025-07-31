@@ -13,8 +13,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        project: [NcGtk, NcWpf]
         include:
           - os: ubuntu-latest
             project: NcGtk
@@ -26,6 +24,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -48,19 +48,8 @@ jobs:
       - name: Archive
         run: zip -r ${{ matrix.output }} ./publish/${{ matrix.project }}
 
-      - name: Upload ZIP to workspace
+      - name: Move ZIP to workspace
         run: mv ${{ matrix.output }} ${{ github.workspace }}/
-
-      - name: Create Git Tag
-        run: |
-          git config user.name "github-actions"
-          git config user.email "damian@morozov33.ru"
-          VERSION=${{ steps.changelog.outputs.version }}
-          git tag $VERSION
-          git push origin $VERSION
-        env:
-          GH_PUSH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
-        continue-on-error: false
 
   release:
     needs: build
@@ -68,6 +57,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Extract version from CHANGELOG.md
         id: changelog
@@ -75,6 +66,19 @@ jobs:
           VERSION=$(grep -m1 '^## \[' CHANGELOG.md | sed -E 's/^## \[([0-9]+\.[0-9]+\.[0-9]+)\].*/v\1/')
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Set up Git config
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Push Git Tag
+        run: |
+          git tag ${{ steps.changelog.outputs.version }}
+          git remote set-url origin https://x-access-token:${{ secrets.GH_PUSH_TOKEN }}@github.com/${{ github.repository }}
+          git push origin ${{ steps.changelog.outputs.version }}
+        env:
+          GH_PUSH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
