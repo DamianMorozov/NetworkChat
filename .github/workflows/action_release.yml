@@ -7,6 +7,8 @@ on:
       - '**.cs'
       - '**.csproj'
       - 'CHANGELOG.md'
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -14,19 +16,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        include:
-          - os: ubuntu-latest
-            project: NcGtk
-            output: NcGtk.zip
-          - os: windows-latest
-            project: NcWpf
-            output: NcWpf.zip
+        os: [windows-latest, ubuntu-latest]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -40,22 +34,21 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore NetworkChat.sln
 
-      - name: Build
-        run: dotnet build ${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --no-restore
-
-      - name: Publish
-        run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --output ./publish/${{ matrix.project }}
+      - name: Build NcWpf (Windows)
+        if: matrix.os == 'windows-latest'
+        run: dotnet publish NcWpf/NcWpf.csproj -c Release -o publish/NcWpf
 
       - name: Archive NcWpf (Windows)
         if: matrix.os == 'windows-latest'
         run: Compress-Archive -Path publish/NcWpf/* -DestinationPath NcWpf.zip
-      
+
+      - name: Build NcGtk (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: dotnet publish NcGtk/NcGtk.csproj -c Release -o publish/NcGtk
+
       - name: Archive NcGtk (Linux)
         if: matrix.os == 'ubuntu-latest'
         run: zip -r NcGtk.zip ./publish/NcGtk
-
-      - name: Move ZIP to workspace
-        run: mv ${{ matrix.output }} ${{ github.workspace }}/
 
   release:
     needs: build
