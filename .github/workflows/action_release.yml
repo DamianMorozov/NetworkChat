@@ -1,5 +1,10 @@
 name: Auto Release from Changelog
 
+permissions:
+  contents: write
+  packages: write
+  issues: write
+
 on:
   push:
     branches: [main]
@@ -98,16 +103,12 @@ jobs:
             --notes "${{ steps.get_body.outputs.body }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          body: ${{ steps.get_body.outputs.body }}
-          name: Release ${{ github.event.inputs.version }}
-          files: |
-            artifacts/NcWpf.zip
-            artifacts/NcGtk.zip
-          draft: false
-          prerelease: true
+      - name: Install GitHub CLI
+        run: sudo apt install gh
+      - name: Create GitHub Release with gh
+        run: |
+          gh release create ${{ steps.get_version.outputs.version }} ./artifacts/* \
+            --title "Release ${{ steps.get_version.outputs.version }}" \
+            --notes "${{ steps.get_body.outputs.body }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
