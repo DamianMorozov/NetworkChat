@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.120] - 2025-07-31
 ### Added
 - Added GitHub Actions for CI/CD
+- Added automatic build and publish prerelase to GitHub
 
 ## [0.1.110] - 2025-07-29
 ### Added

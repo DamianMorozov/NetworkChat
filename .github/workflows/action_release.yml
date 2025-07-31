@@ -22,16 +22,12 @@ jobs:
         with:
           dotnet-version: '9.0.x'
       - name: Restore NcWpf (Windows)
-        if: matrix.os == 'windows-latest'
         run: dotnet restore NcWpf/NcWpf.csproj
       - name: Build NcWpf (Windows)
-        if: matrix.os == 'windows-latest'
         run: dotnet publish NcWpf/NcWpf.csproj -c Release -o publish/NcWpf
       - name: Archive NcWpf (Windows)
-        if: matrix.os == 'windows-latest'
         run: Compress-Archive -Path publish/NcWpf/* -DestinationPath NcWpf.zip
       - name: Upload NcWpf artifact
-        if: matrix.os == 'windows-latest'
         uses: actions/upload-artifact@v4
         with:
           name: NcWpf
@@ -47,19 +43,14 @@ jobs:
         with:
           dotnet-version: '9.0.x'
       - name: Install GTK (Linux only)
-        if: matrix.os == 'ubuntu-latest'
         run: sudo apt update && sudo apt install -y libgtk-3-dev pkg-config
       - name: Restore NcGtk (Linux)
-        if: matrix.os == 'ubuntu-latest'
         run: dotnet restore NcGtk/NcGtk.csproj
       - name: Build NcGtk (Linux)
-        if: matrix.os == 'ubuntu-latest'
         run: dotnet publish NcGtk/NcGtk.csproj -c Release -o publish/NcGtk
       - name: Archive NcGtk (Linux)
-        if: matrix.os == 'ubuntu-latest'
         run: zip -r NcGtk.zip ./publish/NcGtk
       - name: Upload NcGtk artifact
-        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: NcGtk
@@ -79,6 +70,13 @@ jobs:
         with:
           name: NcWpf
           path: ./artifacts
+      - name: Extract release body from CHANGELOG
+        id: get_body
+        run: |
+            body=$(awk '/^## \[/{i++} i==1{print}' CHANGELOG.md | tail -n +2)
+            echo "body<<EOF" >> $GITHUB_OUTPUT
+            echo "$body" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
       - name: Download NcGtk artifact
         uses: actions/download-artifact@v4
         with:
@@ -101,11 +99,13 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.event.inputs.version }}
+          tag_name: ${{ steps.get_version.outputs.version }}
+          body: ${{ steps.get_body.outputs.body }}
           name: Release ${{ github.event.inputs.version }}
-          body: ${{ steps.changelog.outputs.body }}
           files: |
             artifacts/NcWpf.zip
             artifacts/NcGtk.zip
+          draft: false
+          prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
