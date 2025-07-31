@@ -46,8 +46,13 @@ jobs:
       - name: Publish
         run: dotnet publish ${{ matrix.project }}/${{ matrix.project }}.csproj --configuration Release --output ./publish/${{ matrix.project }}
 
-      - name: Archive
-        run: zip -r ${{ matrix.output }} ./publish/${{ matrix.project }}
+      - name: Archive NcWpf (Windows)
+        if: matrix.os == 'windows-latest'
+        run: Compress-Archive -Path publish/NcWpf/* -DestinationPath NcWpf.zip
+      
+      - name: Archive NcGtk (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: zip -r NcGtk.zip ./publish/NcGtk
 
       - name: Move ZIP to workspace
         run: mv ${{ matrix.output }} ${{ github.workspace }}/
