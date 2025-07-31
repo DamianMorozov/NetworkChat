@@ -10,11 +10,6 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'New version tag (e.g. v0.1.010)'
-        required: true
-        default: 'v0.0.000'
 
 jobs:
   build:
@@ -77,6 +72,13 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get latest version from CHANGELOG
+        id: get_version
+        run: echo "version=v$(grep '^## \[' CHANGELOG.md | head -n1 | sed 's/^## \[\(.*\)\].*/\1/')" >> $GITHUB_OUTPUT
+
       - name: Download NcWpf artifact
         uses: actions/download-artifact@v4
         with:
@@ -88,9 +90,6 @@ jobs:
         with:
           name: NcGtk
           path: ./artifacts
-
-      - name: Checkout
-        uses: actions/checkout@v4
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
@@ -106,16 +105,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git tag ${{ github.event.inputs.version }}
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} ${{ github.event.inputs.version }}
-
-      - name: Parse changelog
-        id: changelog
-        run: |
-          body=$(awk '/^##\s*${{ github.event.inputs.version }}/,/^##/' CHANGELOG.md | sed '1d' | sed '$d')
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          echo "$body" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          git tag ${{ steps.get_version.outputs.version }}
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} ${{ steps.get_version.outputs.version }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
