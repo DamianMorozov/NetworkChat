@@ -100,7 +100,7 @@ jobs:
         run: git config --global user.name "Damian Viktorovich Morozov"
             git config --global user.email "damian@morozov33.ru"
       - name: Setup GitHub CLI
-        uses: cli/gh-action@v2
+        uses: actions4gh/setup-gh@v1
       - name: Delete existing release (if exists)
         run: gh release delete ${{ steps.get_version.outputs.version }} --yes || true
         env:
