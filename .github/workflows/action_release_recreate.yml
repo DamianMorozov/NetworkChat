@@ -1,4 +1,4 @@
-name: Auto Release from Changelog
+name: Delete and create release from Changelog
 
 permissions:
   contents: write
@@ -21,7 +21,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -42,7 +44,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -65,23 +69,24 @@ jobs:
     needs: [build_windows, build_linux]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
       - name: Get latest version from CHANGELOG
         id: get_version
         run: echo "version=v$(grep '^## \[' CHANGELOG.md | head -n1 | sed 's/^## \[\(.*\)\].*/\1/')" >> $GITHUB_OUTPUT
+      - name: Get release description from CHANGELOG
+        id: get_body
+        run: body=$(awk '/^## \[/{i++} i==1{print}' CHANGELOG.md | tail -n +2)
+            echo "body<<EOF" >> $GITHUB_OUTPUT
+            echo "$body" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
       - name: Download NcWpf artifact
         uses: actions/download-artifact@v4
         with:
           name: NcWpf
           path: ./artifacts
-      - name: Extract release body from CHANGELOG
-        id: get_body
-        run: |
-            body=$(awk '/^## \[/{i++} i==1{print}' CHANGELOG.md | tail -n +2)
-            echo "body<<EOF" >> $GITHUB_OUTPUT
-            echo "$body" >> $GITHUB_OUTPUT
-            echo "EOF" >> $GITHUB_OUTPUT
       - name: Download NcGtk artifact
         uses: actions/download-artifact@v4
         with:
@@ -92,22 +97,28 @@ jobs:
         with:
           dotnet-version: '9.0.x'
       - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - name: Create tag and release
-        run: |
-          gh auth setup-git
-          gh release create ${{ steps.get_version.outputs.version }} ./artifacts/* \
-            --title "${{ steps.get_version.outputs.version }}" \
-            --notes "${{ steps.get_body.outputs.body }}"
+        run: git config --global user.name "Damian Viktorovich Morozov"
+            git config --global user.email "damian@morozov33.ru"
+      - name: Setup GitHub CLI
+        uses: cli/gh-action@v2
+      - name: Delete existing release (if exists)
+        run: gh release delete ${{ steps.get_version.outputs.version }} --yes || true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Install GitHub CLI
-        run: sudo apt install gh
-      - name: Create GitHub Release with gh
+      - name: Delete existing tag (if exists)
+        run: git show-ref --tags "${{ steps.get_version.outputs.version }}" && \
+            git push origin --delete "${{ steps.get_version.outputs.version }}" || true
+      - name: Create annotated Git tag
         run: |
-          gh release create ${{ steps.get_version.outputs.version }} ./artifacts/* \
+            git tag -a "${{ steps.get_version.outputs.version }}" -m "$(cat <<EOF
+            ${{ steps.get_body.outputs.body }}
+            EOF
+              )"
+              git push origin "${{ steps.get_version.outputs.version }}"
+            git push origin "${{ steps.get_version.outputs.version }}"
+      - name: Create GitHub Release
+        run: gh auth setup-git
+            gh release create ${{ steps.get_version.outputs.version }} ./artifacts/* \
             --title "Release ${{ steps.get_version.outputs.version }}" \
             --notes "${{ steps.get_body.outputs.body }}"
         env:
