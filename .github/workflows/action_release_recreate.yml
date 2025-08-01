@@ -110,6 +110,7 @@ jobs:
         run: |
             git show-ref --tags "${{ steps.get_version.outputs.version }}" && \
             git push origin --delete "${{ steps.get_version.outputs.version }}" || true
+            git tag -d "${{ steps.get_version.outputs.version }}" || true
       - name: Create annotated Git tag
         run: |
             git tag -a "${{ steps.get_version.outputs.version }}" -m "$(cat <<EOF
