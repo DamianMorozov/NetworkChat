@@ -85,6 +85,7 @@ jobs:
             gh auth setup-git
             gh release create ${{ steps.get_version.outputs.version }} ./artifacts/* \
             --title "Release ${{ steps.get_version.outputs.version }}" \
-            --notes "${{ steps.get_body.outputs.body }}"
+            --notes "${{ steps.get_body.outputs.body }}" \
+            --prerelease
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
