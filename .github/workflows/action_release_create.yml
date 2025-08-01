@@ -1,4 +1,4 @@
-name: Create tag and release from Changelog (only if missing)
+name: Create new release
 
 permissions:
   contents: write

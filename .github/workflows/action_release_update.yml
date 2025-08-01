@@ -1,4 +1,4 @@
-name: Delete and create release from Changelog
+name: Update existing release
 
 permissions:
   contents: write
