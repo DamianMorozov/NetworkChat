@@ -10,16 +10,17 @@
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<DefineConstants>DEBUG;TRACE</DefineConstants>
-		<DebugSymbols>true</DebugSymbols>
 		<DebugType>full</DebugType>
-		<Optimize>false</Optimize>
+		<DebugSymbols>true</DebugSymbols>
 		<OutputPath>bin\Debug_AnyCPU</OutputPath>
+		<Optimize>false</Optimize>
 		<ErrorReport>prompt</ErrorReport>
 	</PropertyGroup>
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-		<DebugType>portable</DebugType>
 		<PlatformTarget>AnyCPU</PlatformTarget>
 		<DefineConstants>TRACE</DefineConstants>
+		<DebugType>none</DebugType>
+		<DebugSymbols>false</DebugSymbols>
 		<OutputPath>bin\Release_AnyCPU</OutputPath>
 	</PropertyGroup>
 </Project>

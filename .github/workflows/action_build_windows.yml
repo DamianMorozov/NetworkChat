@@ -22,7 +22,7 @@ jobs:
       - name: Restore NcWpf (Windows)
         run: dotnet restore NcWpf/NcWpf.csproj
       - name: Build NcWpf (Windows)
-        run: dotnet publish NcWpf/NcWpf.csproj -c Release -o publish/NcWpf
+        run: dotnet publish NcWpf/NcWpf.csproj -c Release -o publish/NcWpf /p:DebugType=none /p:DebugSymbols=false
       - name: Archive NcWpf (Windows)
         run: Compress-Archive -Path publish/* -DestinationPath NcWpf.zip
       - name: Upload NcWpf artifact

@@ -10,17 +10,24 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		.github\workflows\action_build_linux.yml = .github\workflows\action_build_linux.yml
-		.github\workflows\action_build_windows.yml = .github\workflows\action_build_windows.yml
 		CHANGELOG.md = CHANGELOG.md
-		.github\workflows\action_release_create.yml = .github\workflows\action_release_create.yml
-		.github\workflows\action_release_update.yml = .github\workflows\action_release_update.yml
+		Directory.Build.props = Directory.Build.props
 		LICENSE.md = LICENSE.md
 		README-RUS.md = README-RUS.md
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NcGtk", "NcGtk\NcGtk.csproj", "{088B663A-B392-2CDF-2B83-8981334E13F2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{292901F6-92A8-42E7-93E1-D0B42EAD6FE2}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\action_build_linux.yml = .github\workflows\action_build_linux.yml
+		.github\workflows\action_build_windows.yml = .github\workflows\action_build_windows.yml
+		.github\workflows\action_release_create.yml = .github\workflows\action_release_create.yml
+		.github\workflows\action_release_update.yml = .github\workflows\action_release_update.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +50,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{292901F6-92A8-42E7-93E1-D0B42EAD6FE2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B16EFF5-64DC-40E8-BB63-800465D1C240}

@@ -24,7 +24,7 @@ jobs:
       - name: Restore NcGtk (Linux)
         run: dotnet restore NcGtk/NcGtk.csproj
       - name: Build NcGtk (Linux)
-        run: dotnet publish NcGtk/NcGtk.csproj -c Release -o publish/NcGtk
+        run: dotnet publish NcGtk/NcGtk.csproj -c Release -o publish/NcGtk /p:DebugType=none /p:DebugSymbols=false
       - name: Rename folder for clean archive structure
         run: |
           rm -rf NcGtk
