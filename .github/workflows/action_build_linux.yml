@@ -28,7 +28,7 @@ jobs:
       - name: Archive NcGtk (Linux)
         run: |
             mkdir -p NcGtk
-            cp -r publish/NcGtk/* NcGtk/
+            cp publish/NcGtk/bin/Release/net9.0/* NcGtk/
             zip -r NcGtk.zip NcGtk
       - name: Upload NcGtk artifact
         uses: actions/upload-artifact@v4
