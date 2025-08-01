@@ -94,7 +94,8 @@ jobs:
         with:
           dotnet-version: '9.0.x'
       - name: Configure Git
-        run: git config --global user.name "Damian Viktorovich Morozov"
+        run: |
+            git config --global user.name "Damian Viktorovich Morozov"
             git config --global user.email "damian@morozov33.ru"
       - name: Setup GitHub CLI
         uses: actions4gh/setup-gh@v1
@@ -103,7 +104,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Delete existing tag (if exists)
-        run: git show-ref --tags "${{ steps.get_version.outputs.version }}" && \
+        run: |
+            git show-ref --tags "${{ steps.get_version.outputs.version }}" && \
             git push origin --delete "${{ steps.get_version.outputs.version }}" || true
       - name: Create annotated Git tag
         run: |
@@ -114,7 +116,8 @@ jobs:
               git push origin "${{ steps.get_version.outputs.version }}"
             git push origin "${{ steps.get_version.outputs.version }}"
       - name: Create GitHub Release
-        run: gh auth setup-git
+        run: |
+            gh auth setup-git
             gh release create ${{ steps.get_version.outputs.version }} ./artifacts/* \
             --title "Release ${{ steps.get_version.outputs.version }}" \
             --notes "${{ steps.get_body.outputs.body }}"
