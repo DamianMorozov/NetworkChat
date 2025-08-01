@@ -1,4 +1,4 @@
-name: Create new release
+name: Create new version release
 
 permissions:
   contents: write

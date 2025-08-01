@@ -1,4 +1,4 @@
-name: Update existing release
+name: Update existing version release
 
 permissions:
   contents: write
