@@ -72,6 +72,7 @@ jobs:
         if: steps.check_tag.outputs.exists == 'true'
         run: echo "Tag already exists. Exiting..."
       - name: Create annotated Git tag
+        if: steps.check_tag.outputs.exists == 'false'
         run: |
             git tag -a "${{ steps.get_version.outputs.version }}" -m "$(cat <<EOF
             ${{ steps.get_body.outputs.body }}
@@ -80,6 +81,7 @@ jobs:
               git push origin "${{ steps.get_version.outputs.version }}"
             git push origin "${{ steps.get_version.outputs.version }}"
       - name: Create GitHub Release
+        if: steps.check_tag.outputs.exists == 'false'
         run: |
             gh auth setup-git
             gh release create ${{ steps.get_version.outputs.version }} ./artifacts/* \
