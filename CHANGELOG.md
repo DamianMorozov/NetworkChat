@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.130] - 2025-08-01
 ### Fixed
 - Fixed GitHub Actions for CI/CD
+### Added
+- Added release notes for GitHub Actions
 
 ## [0.1.120] - 2025-07-31
 ### Added
