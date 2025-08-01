@@ -4,12 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.190] - 2025-08-01
+## [0.1.200] - 2025-08-01
 ### Fixed
 - Fixed GitHub Actions for CI/CD
 ### Changed
 - Split GitHub Actions into separate jobs
-- Removed pdf generation from GitHub Actions
+- Removed pdb generation from GitHub Actions
 ### Added
 - Added release notes for GitHub Actions
 - Added GitHub Actions for build
