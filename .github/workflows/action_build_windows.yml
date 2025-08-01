@@ -1,0 +1,32 @@
+name: Build Windows
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        required: true
+        type: string
+
+jobs:
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+            fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+      - name: Restore NcWpf (Windows)
+        run: dotnet restore NcWpf/NcWpf.csproj
+      - name: Build NcWpf (Windows)
+        run: dotnet publish NcWpf/NcWpf.csproj -c Release -o publish/NcWpf
+      - name: Archive NcWpf (Windows)
+        run: Compress-Archive -Path publish/NcWpf/* -DestinationPath NcWpf.zip
+      - name: Upload NcWpf artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NcWpf
+          path: NcWpf.zip

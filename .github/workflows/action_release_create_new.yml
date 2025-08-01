@@ -1,4 +1,4 @@
-name: Delete and create release from Changelog
+name: Create tag and release from Changelog (only if missing)
 
 permissions:
   contents: write
@@ -60,15 +60,17 @@ jobs:
         run: |
             git config --global user.name "Damian Viktorovich Morozov"
             git config --global user.email "damian@morozov33.ru"
-      - name: Delete existing release (if exists)
-        run: gh release delete ${{ steps.get_version.outputs.version }} --yes || true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Delete existing tag (if exists)
+      - name: Check if tag exists
+        id: check_tag
         run: |
-            git show-ref --tags "${{ steps.get_version.outputs.version }}" && \
-            git push origin --delete "${{ steps.get_version.outputs.version }}" || true
-            git tag -d "${{ steps.get_version.outputs.version }}" || true
+          if git rev-parse "${{ steps.get_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Exit if tag already exists
+        if: steps.check_tag.outputs.exists == 'true'
+        run: echo "Tag already exists. Exiting..."
       - name: Create annotated Git tag
         run: |
             git tag -a "${{ steps.get_version.outputs.version }}" -m "$(cat <<EOF
